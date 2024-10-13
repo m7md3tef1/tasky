@@ -19,7 +19,7 @@ class EditTaskCubit extends Cubit<EditTaskState> {
   EditTaskCubit() : super(AddTaskInitial());
   static EditTaskCubit get(context) => BlocProvider.of(context);
   Connectivity connectivity = Connectivity();
-  addImage(image, title, desc, priority, dueDate, context,id) async {
+  addImage(image, title, desc, priority, dueDate, context,id,status) async {
     emit(AddImageLoading());
     connectivity.checkConnectivity().then((value) async {
       if (ConnectivityResult.none == value) {
@@ -47,7 +47,7 @@ class EditTaskCubit extends Cubit<EditTaskState> {
           print(value['image']),
           emit(AddImageSuccess()),
           editTask(
-              value['image'], title, desc, priority, dueDate, context,id),
+              value['image'], title, desc, priority, dueDate, context,id,status),
         })
             .onError(
                 (error, stackTrace) => {print(error), emit(AddImageFailed())});
@@ -55,7 +55,7 @@ class EditTaskCubit extends Cubit<EditTaskState> {
     });
   }
 
-  editTask(image, title, desc, priority, dueDate, context,id) async {
+  editTask(image, title, desc, priority, dueDate, context,id,status) async {
     emit(EditTaskLoading());
     connectivity.checkConnectivity().then((value) async {
       if (ConnectivityResult.none == value) {
@@ -72,6 +72,7 @@ class EditTaskCubit extends Cubit<EditTaskState> {
               'title': title,
               'desc': desc,
               'priority': priority,
+              'status': status,
               'dueDate': dueDate
             }));
         response

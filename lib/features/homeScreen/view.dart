@@ -1,18 +1,24 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:untitled/core/app_images/app_images.dart';
 import 'package:untitled/core/color_manager/color_manager.dart';
 import 'package:untitled/core/router/router.dart';
 import 'package:untitled/core/widgets/custom_text.dart';
 import 'package:untitled/features/add_task/view.dart';
 import 'package:untitled/features/auth/cubit/auth_cubit.dart';
-import 'package:untitled/features/auth/view/login.dart';
 import 'package:untitled/features/edit_task/view.dart';
 import 'package:untitled/features/homeScreen/cubit/tasks_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:untitled/features/homeScreen/units/scan_qr.dart';
 import 'package:untitled/features/layout/todo_app_cubit.dart';
 import '../../core/const/utils.dart';
 import '../../core/data/local/cacheHelper.dart';
@@ -36,6 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     AuthCubit.get(context).getUserData(context);
+    TasksCubit.get(context).listTasks.clear();
+    TasksCubit.get(context).listTasks1.clear();
+    TasksCubit.get(context).listTasks2.clear();
+    TasksCubit.get(context).listTasks3.clear();
     TasksCubit.get(context).pageNumberFilter = 1;
     TasksCubit.get(context).getTasks(context, fromLoading: false);
     super.initState();
@@ -47,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
       listener: (context, state) {
         if (state is RefreshTokenSuccess) {
           token = CacheHelper.getString(SharedKeys.token);
-          print('ssssssssssssssssss$token');
           AuthCubit.get(context).getUserData(context);
           TasksCubit.get(context).pageNumberFilter = 1;
           TasksCubit.get(context).getTasks(context, fromLoading: false);
@@ -75,10 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(width: 20.w),
                     InkWell(
                       onTap: () {
-                        // TasksCubit.get(context).listTasks.clear();
-                        // TasksCubit.get(context).listTasks = [];
                         AuthCubit.get(context).logout(context);
-                        // MagicRouter.navigateAndPopAll(TodoAppLogin());
                       },
                       child: const Icon(Icons.logout_outlined,
                           color: ColorManager.backgroundColor),
@@ -96,15 +102,20 @@ class _HomeScreenState extends State<HomeScreen> {
               floatingActionButton: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: const Color(0xFFEBE5FF).withOpacity(.6),
-                        borderRadius: BorderRadius.circular(24.r),
-                        border: Border.all(color: Colors.transparent)),
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.qr_code_2_outlined,
-                            color: ColorManager.backgroundColor, size: 30.w)),
+                  InkWell(
+                    onTap: () {
+                      MagicRouter.navigateTo(const ScanScreen());
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFEBE5FF).withOpacity(.6),
+                          borderRadius: BorderRadius.circular(24.r),
+                          border: Border.all(color: Colors.transparent)),
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.qr_code_2_outlined,
+                              color: ColorManager.backgroundColor, size: 30.w)),
+                    ),
                   ),
                   SizedBox(height: 14.h),
                   FloatingActionButton(

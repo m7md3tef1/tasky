@@ -64,12 +64,12 @@ class TapBar extends StatelessWidget {
                   ),
                 ),
               ),
-              const Expanded(
+                Expanded(
                   child: TabBarView(children: [
-                AllTasks(),
-                SizedBox(),
-                SizedBox(),
-                SizedBox()
+                AllTasks('all'),
+                AllTasks('inProgress'),
+                AllTasks('waiting'),
+                AllTasks('finish'),
               ]))
             ],
           ),

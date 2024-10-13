@@ -129,6 +129,9 @@ class AuthCubit extends Cubit<AuthState> {
             .then((value) async => {
                   TasksCubit.get(context).listTasks.clear(),
                   TasksCubit.get(context).listTasks = [],
+                  TasksCubit.get(context).listTasks1.clear(),
+                  TasksCubit.get(context).listTasks2.clear(),
+                  TasksCubit.get(context).listTasks3.clear(),
                   emit(LogoutSuccess()),
                   showToast(
                       msg: 'Logout Successfully', state: ToastedStates.SUCCESS),
@@ -164,58 +167,6 @@ class AuthCubit extends Cubit<AuthState> {
                 })
             .onError((error, stackTrace) => {
                   emit(GetUserDataFailed(error)),
-                });
-      }
-    });
-  }
-
-  // Users profileData2 =Users();
-  updateTask(context, name, email, phone, image) async {
-    connectivity.checkConnectivity().then((value) async {
-      if (ConnectivityResult.none == value) {
-        emit(NetworkFailed("Check your internet connection and try again"));
-        showToast(
-            msg: 'Check your internet connection and try again',
-            state: ToastedStates.WARNING);
-      } else {
-        FormData formData;
-        if (image == null) {
-          formData = FormData.fromMap({
-            'name': name,
-            'email': email,
-            'phone': phone,
-          });
-        } else {
-          String fileName = image != null ? image!.split('/').last : '';
-
-          formData = FormData.fromMap({
-            'image': await MultipartFile.fromFile(image!, filename: fileName),
-            'name': name,
-            'email': email,
-            'phone': phone,
-          });
-        }
-
-        var token = await CacheHelper.getString(SharedKeys.token);
-        var response = Api().postHttpRegister(context,
-            url: 'update-profile?_method=patch',
-            data: formData,
-            authToken: token);
-        emit(UpdateLoading());
-        response
-            .then((value) => {
-                  // GetUserDataModel =  Users.fromJson(value['data']['user']),
-                  emit(UpdateSuccess(value['data']['user'])),
-                  showToast(
-                      msg: 'update Profile successfully',
-                      state: ToastedStates.SUCCESS),
-                })
-            .onError((error, stackTrace) => {
-                  showToast(
-                      msg: error.toString().split(', errors:')[0].replaceAll(
-                          'Exception: {status: false, message:', ''),
-                      state: ToastedStates.ERROR),
-                  emit(UpdateFailed(error)),
                 });
       }
     });

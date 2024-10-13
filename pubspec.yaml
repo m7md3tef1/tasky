@@ -54,6 +54,8 @@ dependencies:
   fluttertoast: ^8.2.4
   country_code_picker: ^3.0.0
   easy_localization: ^3.0.7
+  qr_flutter: ^4.1.0
+  mobile_scanner:
 #  flutter_launcher_icons: ^0.14.1
 
 dev_dependencies:

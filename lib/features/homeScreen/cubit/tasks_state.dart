@@ -34,3 +34,14 @@ class DeleteTaskSuccess extends TasksState {
 class DeleteTaskFailed extends TasksState {
   DeleteTaskFailed();
 }
+
+//get_tasks
+class GetTaskLoading extends TasksState {}
+
+class GetTaskSuccess extends TasksState {
+  GetTaskSuccess();
+}
+
+class GetTaskFailed extends TasksState {
+  GetTaskFailed();
+}
