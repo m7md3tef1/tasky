@@ -36,7 +36,6 @@ class AuthCubit extends Cubit<AuthState> {
     emit(SelfLabChangePasswordVisibilityState());
   }
 
-  var loginData;
   signIn(phone, password, context) async {
     emit(SignInLoading());
     connectivity.checkConnectivity().then((value) async {
@@ -51,7 +50,6 @@ class AuthCubit extends Cubit<AuthState> {
             data: jsonEncode({'phone': phone, 'password': password}));
         response
             .then((value) async => {
-                  loginData = value,
                   CacheHelper.putString(
                       SharedKeys.refreshToken, value["refresh_token"]),
                   refreshToken = CacheHelper.getString(SharedKeys.refreshToken),

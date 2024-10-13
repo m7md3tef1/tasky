@@ -27,22 +27,23 @@ class AddTaskCubit extends Cubit<AddTaskState> {
             state: ToastedStates.WARNING);
       } else {
         String fileName = image.path.split('/').last;
-        print(token);
-        print(fileName.split('.')[1]);
+        // print(token);
+        // print(fileName.split('.')[1]);
         FormData formData = FormData.fromMap({
           "image": await MultipartFile.fromFile(
             image.path,
             filename: fileName,
-            contentType: MediaType("image",
-                fileName.split('.')[1]), //important
+            contentType: MediaType("image", fileName.split('.')[1]), //important
           ),
         });
         var response = Api().postHttpImage(context,
-            url: 'upload/image', authToken: CacheHelper.getString(SharedKeys.token), data: formData);
+            url: 'upload/image',
+            authToken: CacheHelper.getString(SharedKeys.token),
+            data: formData);
         response
             .then((value) async => {
-                  print(value),
-                  print(value['image']),
+                  // print(value),
+                  // print(value['image']),
                   emit(AddImageSuccess()),
                   addTask(
                       value['image'], title, desc, priority, dueDate, context),
